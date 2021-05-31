@@ -1,0 +1,15 @@
+# Free endpoint: 188,281
+GET https://api.meteo.pl/api/v1/model/coamps/grid/2a/latlon2rowcol/52.7,23.86667
+Authorization: Token 
+
+###
+
+# Gdansk: 117,85
+GET https://api.meteo.pl/api/v1/model/coamps/grid/2a/latlon2rowcol/54.35205,18.64637
+Authorization: Token 
+
+###
+
+GET https://api.meteo.pl/api/v1/model/coamps/grid/2a/coordinates/117,85/field/uuwind_sig_fcstfld/level
+Authorization: Token 
+
