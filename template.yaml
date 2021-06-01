@@ -1,21 +1,17 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  weather-alert
-
-  Sample SAM Template for weather-alert
+  SAM Template for weather-alert
 
 Resources:
-  StockTradingStateMachine:
+  WeatherAlertStateMachine:
     Type: AWS::Serverless::StateMachine # More info about State Machine Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html
     Properties:
-      DefinitionUri: statemachine/stock_trader.asl.json
+      DefinitionUri: statemachine/weather-alert.asl.json
       DefinitionSubstitutions:
-        GetYrNoForecastArn: !GetAtt GetYrNoForecast.Arn
-        StockSellerFunctionArn: !GetAtt StockSellerFunction.Arn
-        StockBuyerFunctionArn: !GetAtt StockBuyerFunction.Arn
-        DDBPutItem: !Sub arn:${AWS::Partition}:states:::dynamodb:putItem
-        DDBTable: !Ref TransactionTable
+        GetYrNoForecastArn: !GetAtt GetYrNoForecastFunction.Arn
+        MapToConditionsMetArn: !GetAtt MapToConditionsMetFunction.Arn
+        SendAlertFunctionArn: !GetAtt SendAlertFunction.Arn
       Events:
         HourlyTradingSchedule:
           Type: Schedule # More info about Schedule Event Source: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-statemachine-schedule.html
@@ -25,52 +21,40 @@ Resources:
             Schedule: "rate(1 hour)"
       Policies: # Find out more about SAM policy templates: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-templates.html
         - LambdaInvokePolicy:
-            FunctionName: !Ref GetYrNoForecast
+            FunctionName: !Ref GetYrNoForecastFunction
         - LambdaInvokePolicy:
-            FunctionName: !Ref StockSellerFunction
+            FunctionName: !Ref MapToConditionsMetFunction
         - LambdaInvokePolicy:
-            FunctionName: !Ref StockBuyerFunction
-        - DynamoDBWritePolicy:
-            TableName: !Ref TransactionTable
+            FunctionName: !Ref SendAlertFunction
 
-  GetYrNoForecast:
+  GetYrNoForecastFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
     Properties:
       CodeUri: functions/clients/get-yrno-forecast/
       Handler: app.lambdaHandler
       Runtime: nodejs14.x
 
-  StockSellerFunction:
+  MapToConditionsMetFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: functions/stock-seller/
+      CodeUri: functions/map-to-conditions-met/
       Handler: app.lambdaHandler
       Runtime: nodejs14.x
 
-  StockBuyerFunction:
+  SendAlertFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: functions/stock-buyer/
+      CodeUri: functions/send-alert/
       Handler: app.lambdaHandler
       Runtime: nodejs14.x
-
-  TransactionTable:
-    Type: AWS::Serverless::SimpleTable # More info about SimpleTable Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-simpletable.html
-    Properties:
-      PrimaryKey:
-        Name: Id
-        Type: String
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
 
 Outputs:
   # StockTradingStateMachineHourlyTradingSchedule is an implicit Schedule event rule created out of Events key under Serverless::StateMachine
   # Find out more about other implicit resources you can reference within SAM
   # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-generated-resources.html
-  StockTradingStateMachineArn:
-    Description: "Stock Trading state machine ARN"
-    Value: !Ref StockTradingStateMachine
-  StockTradingStateMachineRole:
-    Description: "IAM Role created for Stock Trading state machine based on the specified SAM Policy Templates"
-    Value: !GetAtt StockTradingStateMachineRole.Arn
+  WeatherAlertStateMachineArn:
+    Description: "Weather Alert state machine ARN"
+    Value: !Ref WeatherAlertStateMachine
+  WeatherAlertStateMachineRole:
+    Description: "IAM Role created for Weather Alert state machine based on the specified SAM Policy Templates"
+    Value: !GetAtt WeatherAlertStateMachineRole.Arn

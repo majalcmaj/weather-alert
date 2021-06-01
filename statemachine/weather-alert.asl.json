@@ -1,0 +1,66 @@
+{
+    "Comment": "A state machine that sends alerts when wind conditions are met",
+    "StartAt": "Get YrNo Forecast",
+    "States": {
+        "Get YrNo Forecast": {
+            "Type": "Task",
+            "Resource": "${GetYrNoForecastArn}",
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "States.TaskFailed"
+                    ],
+                    "IntervalSeconds": 30,
+                    "MaxAttempts": 5,
+                    "BackoffRate": 1.5
+                }
+            ],
+            "Next": "Map To Conditions Met"
+        },
+        "Map To Conditions Met": {
+            "Type": "Task",
+            "Resource": "${MapToConditionsMetArn}",
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "States.TaskFailed"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 3,
+                    "BackoffRate": 1
+                }
+            ],
+            "Next": "Should Alert?"
+        },
+        "Should Alert?": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.shouldAlert",
+                    "BooleanEquals": true,
+                    "Next": "Send Alert"
+                }
+            ],
+            "Default": "End"
+        },
+       "Send Alert": {
+            "Type": "Task",
+            "Resource": "${SendAlertFunctionArn}",
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "States.TaskFailed"
+                    ],
+                    "IntervalSeconds": 30,
+                    "MaxAttempts": 5,
+                    "BackoffRate": 1.5
+                }
+            ],
+            "Next": "End"
+        },
+        "End": {
+            "Type": "Pass",
+            "End": true
+        }
+    }
+}
