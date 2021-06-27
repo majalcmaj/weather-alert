@@ -17,7 +17,7 @@ async function readExampleResponse() {
 describe('Test Yr.No forecast client', function () {
     it('Parses example response properly', async () => {
         const response = await readExampleResponse();
-        sinon.stub(axios, 'get').returns(new Promise((resolve, reject) => resolve({ data: response })));
+        sinon.stub(axios, 'get').returns(Promise.resolve({ data: response }));
 
         const result = await app.lambdaHandler(event, context)
 

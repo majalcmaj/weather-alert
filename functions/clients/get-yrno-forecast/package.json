@@ -10,11 +10,13 @@
     "axios": "^0.21.1"
   },
   "scripts": {
-    "test": "mocha tests/unit/"
+    "test": "mocha tests/unit/",
+    "start": "node app.js"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
     "sinon": "^11.1.1"
   }
+}
 }

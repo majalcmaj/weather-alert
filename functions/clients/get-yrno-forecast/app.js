@@ -10,7 +10,7 @@ function parseReport(rawReport) {
     const timestamps = timeseries.map(measure => measure.time);
     const windSpeeds = timeseries.map(measure => measure.data.instant.details.wind_speed);
     const windDirections = timeseries.map(measure => measure.data.instant.details.wind_from_direction);
-    return {timestamps, windSpeeds, windDirections};
+    return { timestamps, windSpeeds, windDirections };
 }
 
 /**
@@ -27,9 +27,15 @@ exports.lambdaHandler = async function (event, context) {
     try {
         const rawReport = (await getWeaterForecast()).data;
         const parsedReport = parseReport(rawReport);
-        return { forecast: parsedReport}
+        return { forecast: parsedReport }
     } catch (error) {
         console.error(error)
         return { "error": error }
     }
+}
+
+if (require.main === module) {
+    exports.lambdaHandler().then(
+        result => console.log(JSON.stringify(result, null, 2)),
+        console.error);
 }
