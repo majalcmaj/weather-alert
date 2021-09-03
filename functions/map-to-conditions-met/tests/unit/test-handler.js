@@ -7,16 +7,19 @@ const Assertion = chai.Assertion;
 const sinon = require('sinon');
 
 const app = require('../../app.js');
-const readConditions = require('../../conditions-reader');
+const conditionsReader = require('../../conditions-reader');
 
 describe('Tests mapping to conditions met', function () {
-    sinon.stub(readConditions).returns(Promise.resolve({
-        speed: 8.5,
-        directionStart: 270,
-        directionAngle: 90,
-        hourFrom: "8:00",
-        hourTo: "20:00"
-    }));
+
+    this.beforeAll(() => {
+        sinon.replace(conditionsReader, "readConditions", async () => ({
+            speed: 8.5,
+            directionStart: 270,
+            directionAngle: 90,
+            hourFrom: "8:00",
+            hourTo: "20:00"
+        }))
+    })
 
     it('Raises alert when conditions met', async () => {
         const event = await readMockInput("input-good");

@@ -6,12 +6,17 @@
   "repository": "TODO",
   "author": "SAM CLI",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "dayjs": "^1.10.6",
+    "lodash": "^4.17.21"
+  },
   "scripts": {
-    "test": "mocha tests/unit/"
+    "test": "mocha tests/unit/",
+    "start": "node app.js"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^8.2.1"
+    "mocha": "^8.2.1",
+    "sinon": "^11.1.1"
   }
 }
