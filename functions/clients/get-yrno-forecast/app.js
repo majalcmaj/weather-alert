@@ -1,16 +1,17 @@
-const axios = require("axios").default;
+import axios from 'axios';
 
 async function getWeaterForecast() {
-    return axios.get("https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=54.372158&lon=18.63830",
-        { config: { headers: { "User-Agent": "majalcmaj-weather-alert" } } });
+  return axios.get(
+    "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=54.372158&lon=18.63830", 
+    {headers: {"User-Agent": "KiteAlertApp/0.1"}});
 }
 
 function parseReport(rawReport) {
-    const timeseries = rawReport.properties.timeseries;
-    const timestamps = timeseries.map(measure => measure.time);
-    const windSpeeds = timeseries.map(measure => measure.data.instant.details.wind_speed);
-    const windDirections = timeseries.map(measure => measure.data.instant.details.wind_from_direction);
-    return { timestamps, windSpeeds, windDirections };
+  const timeseries = rawReport.properties.timeseries;
+  const timestamps = timeseries.map(measure => measure.time);
+  const windSpeeds = timeseries.map(measure => measure.data.instant.details.wind_speed);
+  const windDirections = timeseries.map(measure => measure.data.instant.details.wind_from_direction);
+  return { timestamps, windSpeeds, windDirections };
 }
 
 /**
@@ -23,19 +24,15 @@ function parseReport(rawReport) {
  * @returns {Object} object - Object containing the current price of the stock
  * 
  */
-exports.lambdaHandler = async function (event, context) {
-    try {
-        const rawReport = (await getWeaterForecast()).data;
-        const parsedReport = parseReport(rawReport);
-        return { forecast: parsedReport }
-    } catch (error) {
-        console.error(error)
-        return { "error": error }
-    }
+const lambdaHandler = async function (event, context) {
+  try {
+    const rawReport = (await getWeaterForecast()).data;
+    const parsedReport = parseReport(rawReport);
+    return { forecast: parsedReport }
+  } catch (error) {
+    console.error(error)
+    return { "error": error }
+  }
 }
 
-if (require.main === module) {
-    exports.lambdaHandler().then(
-        result => console.log(JSON.stringify(result, null, 2)),
-        console.error);
-}
+export { lambdaHandler, getWeaterForecast };
