@@ -14,7 +14,7 @@ describe("Test Yr.No forecast client", function () {
   it("Parses example response properly", async () => {
     const response = await readExampleResponse();
 
-    const result = await getYrNoForecast(async () => ({data: response}));
+    const result = await getYrNoForecast(async () => (response));
 
 
     expect(result).to.be.an("object");

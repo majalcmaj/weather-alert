@@ -14,7 +14,7 @@ function parseReport(rawReport) {
 
 async function getYrNoForecast(fetchForecastFn) {
   try {
-    const rawReport = (await fetchForecastFn()).data;
+    const rawReport = await fetchForecastFn();
     const parsedReport = parseReport(rawReport);
     return { forecast: parsedReport };
   } catch (error) {
