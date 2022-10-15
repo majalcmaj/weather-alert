@@ -6,7 +6,8 @@ describe('Test request', function() {
     const result = await fetchForecast();
 
     expect(result.status).to.be.eq(200);
-    assert.fail("Implement me!");
+    expect(result.data).to.be.an("object");
+    expect(result.data).to.have.nested.property("properties.timeseries");
   });
 })
 
