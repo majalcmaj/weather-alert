@@ -1,5 +1,9 @@
 import _ from "lodash";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone.js";
+
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Poland/Warsaw");
 
 export default async function (forecast, conditionsProvider) {
   const reads = _.zipWith(
@@ -22,8 +26,26 @@ export default async function (forecast, conditionsProvider) {
 }
 
 function readMeetsConditions(conditions, read) {
-  const hour = dayjs(read.timestamp).hour();
-  const hourOk = hour >= conditions.hourFrom && hour <= conditions.hourTo;
+  return (
+    isHourOk(read.timestamp, conditions) &&
+    isSpeedOk(read.windSpeed, conditions) &&
+    isDirectionOk(read.windDirection, conditions)
+  );
+}
 
+function isHourOk(timestamp, conditions) {
+  const hour = dayjs(timestamp).hour();
+  const hourOk = hour >= conditions.hourFrom && hour <= conditions.hourTo;
   return hourOk;
+}
+
+function isSpeedOk(speed, conditions) {
+  return speed > conditions.speed;
+}
+
+function isDirectionOk(windDirection, conditions) {
+  // This is done to avoid conditional branching mess for cases when
+  // directionStart + directionAngle > 360
+  const rotatedDirection = windDirection - conditions.directionStart;
+  return rotatedDirection >= 0 && rotatedDirection <= conditions.directionAngle;
 }

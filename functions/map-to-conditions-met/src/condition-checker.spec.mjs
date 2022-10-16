@@ -8,7 +8,7 @@ describe("Tests mapping to conditions met", function () {
     return {
       speed: 8.5,
       directionStart: 270,
-      directionAngle: 90,
+      directionAngle: 180,
       hourFrom: 8,
       hourTo: 20,
     };
