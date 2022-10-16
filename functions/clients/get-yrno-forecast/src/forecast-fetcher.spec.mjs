@@ -1,4 +1,4 @@
-import fetchForecast from './forecast-fetcher.js';
+import fetchForecast from './forecast-fetcher.mjs';
 import {expect, assert} from 'chai';
 
 describe('Test request', function() {

@@ -3,7 +3,7 @@
 import { expect } from "chai";
 import fs from "fs/promises";
 
-import { getYrNoForecast } from "./app.js";
+import parseForecast from './forecast-parser.mjs';
 
 async function readExampleResponse() {
   const fileContent = await fs.readFile("./test-data/example-response.json", "utf-8");
@@ -14,7 +14,7 @@ describe("Test Yr.No forecast client", function () {
   it("Parses example response properly", async () => {
     const response = await readExampleResponse();
 
-    const result = await getYrNoForecast(async () => (response));
+    const result = await parseForecast(async () => (response));
 
 
     expect(result).to.be.an("object");

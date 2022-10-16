@@ -1,20 +1,18 @@
 {
-  "name": "stock_checker",
+  "name": "yrno_forecast_getter",
   "version": "1.0.0",
-  "description": "Mock stock checker for NodeJS",
-  "main": "app.js",
+  "description": "Gets weather forecast for yr.no",
+  "type": "module",
   "repository": "TODO",
   "author": "SAM CLI",
   "license": "MIT",
-  "type": "module",
   "dependencies": {
     "axios": "^0.21.1",
     "expect.js": "^0.3.1"
   },
   "scripts": {
-    "test": "mocha src/**/*.spec.js",
-    "test-debug": "mocha src/**/*.spec.js --inspect-brk",
-    "start": "node app.js"
+    "test": "mocha src/**/*.spec.mjs",
+    "test-debug": "mocha src/**/*.spec.mjs --inspect-brk"
   },
   "devDependencies": {
     "chai": "^4.2.0",
