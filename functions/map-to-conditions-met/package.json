@@ -5,13 +5,14 @@
   "repository": "TODO",
   "author": "SAM CLI",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
     "dayjs": "^1.11.5",
     "lodash": "^4.17.21"
   },
   "scripts": {
-    "test": "mocha tests/unit/",
-    "start": "node app.js"
+    "test": "mocha src/**/*.spec.mjs",
+    "test-debug": "mocha src/**/*.spec.mjs --inspect-brk"
   },
   "devDependencies": {
     "chai": "^4.3.6",
