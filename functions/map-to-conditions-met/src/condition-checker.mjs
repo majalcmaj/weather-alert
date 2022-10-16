@@ -44,8 +44,8 @@ function isSpeedOk(speed, conditions) {
 }
 
 function isDirectionOk(windDirection, conditions) {
-  // This is done to avoid conditional branching mess for cases when
-  // directionStart + directionAngle > 360
-  const rotatedDirection = windDirection - conditions.directionStart;
-  return rotatedDirection >= 0 && rotatedDirection <= conditions.directionAngle;
+  if (conditions.directionEnd < conditions.directionStart) {
+    return windDirection >= conditions.directionStart || windDirection <= conditions.directionEnd;
+  }
+  return windDirection >= directionStart && windDirection <= directionEnd;
 }

@@ -8,7 +8,7 @@ describe("Tests mapping to conditions met", function () {
     return {
       speed: 8.5,
       directionStart: 270,
-      directionAngle: 180,
+      directionEnd: 90,
       hourFrom: 8,
       hourTo: 20,
     };
@@ -60,3 +60,4 @@ Assertion.addMethod("alert", function (isAlert) {
   expect(result).to.have.key("shouldAlert");
   expect(result.shouldAlert).to.equal(isAlert);
 });
+
